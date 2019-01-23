@@ -1,0 +1,47 @@
+//post()
+
+export function postMethod(value, callback) {
+
+  const data = new FormData();
+  data.append('package_id', value.package_id);
+
+  const request = axios.post(`${ROOT_BASE_URL}${SUBSCRIBE_USER}`, data, {headers: configPost()});
+  return (dispatch) => {
+    request.then((data) => {
+      if (data) {
+        dispatch({type: SUBSCRIBE_USERS, payload: data});
+        callback();
+      }
+    }).catch(function(error) {
+      dispatch({type: SUBSCRIBE_USERS, payload: data});
+      callback();
+    });
+  };
+
+}
+
+function configPost() {
+  if (localStorage.getItem('user_token')) {
+    return ({'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': AUTHORIZATION_TOKEN, 'x-access-token': localStorage.getItem('user_token')});
+  } else {
+    return ({'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': AUTHORIZATION_TOKEN});
+  }
+}
+
+//get()
+
+export function getMethod(callback) {
+
+  const request = axios.get(`${ROOT_BASE_URL}${FETCH_HOME_VALUE}`);
+    return (dispatch) => {
+      request.then(({data}) => {
+        if (data) {
+          dispatch({type: FETCH_HOME_VALUES, payload: request});
+          callback();
+        }
+      });
+    };
+
+}
+
+//
